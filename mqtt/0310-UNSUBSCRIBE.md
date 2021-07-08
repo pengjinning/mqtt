@@ -6,11 +6,39 @@
 
 ##### 图例 3.28 – UNSUBSCRIBE报文固定报头
 
-| **Bit** | **7**                 | **6**  | **5** | **4** | **3** | **2** | **1** | **0** |
-|---------|-----------------------|--------|-------|-------|-------|-------|-------|-------|
-| byte 1  | MQTT控制报文类型 (10) | 保留位 |
-|         | 1                     | 0      | 1     | 0     | 0     | 0     | 1     | 0     |
-| byte 2  | 剩余长度              |
+<table style="text-align:center">
+   <tr>
+     <td align="center"><strong>Bit</strong></td>
+     <td align="center"><strong>7</strong></td>
+     <td align="center"><strong>6</strong></td>
+     <td align="center"><strong>5</strong></td>
+     <td align="center"><strong>4</strong></td>
+     <td align="center"><strong>3</strong></td>
+     <td align="center"><strong>2</strong></td>
+     <td align="center"><strong>1</strong></td>
+     <td align="center"><strong>0</strong></td>
+   </tr>
+   <tr>
+     <td>byte 1</td>
+     <td colspan="4" align="center">MQTT控制报文类型 (10)</td>
+     <td colspan="4" align="center">保留位</td>
+   </tr>
+   <tr>
+       <td></td>
+       <td align="center">1</td>
+       <td align="center">0</td>
+       <td align="center">1</td>
+       <td align="center">0</td>
+       <td align="center">0</td>
+       <td align="center">0</td>
+       <td align="center">1</td>
+       <td align="center">0</td>
+     </tr>
+   <tr>
+     <td>byte 2</td>
+     <td colspan="8" align="center">剩余长度</td>
+   </tr>
+ </table>
 
 UNSUBSCRIBE报文固定报头的第3,2,1,0位是保留位且**必须**分别设置为0,0,1,0。服务端**必须**认为任何其它的值都是不合法的并关闭网络连接 \[MQTT-3.10.1-1\]。
 
@@ -24,10 +52,27 @@ UNSUBSCRIBE报文固定报头的第3,2,1,0位是保留位且**必须**分别设�
 
 ##### 图例 3.29 – UNSUBSCRIBE报文可变报头
 
-| **Bit** | **7**          | **6** | **5** | **4** | **3** | **2** | **1** | **0** |
-|---------|----------------|-------|-------|-------|-------|-------|-------|-------|
-| byte 1  | 报文标识符 MSB |
-| byte 2  | 报文标识符 LSB |
+<table style="text-align:center">
+   <tr>
+     <td align="center"><strong>Bit</strong></td>
+     <td align="center"><strong>7</strong></td>
+     <td align="center"><strong>6</strong></td>
+     <td align="center"><strong>5</strong></td>
+     <td align="center"><strong>4</strong></td>
+     <td align="center"><strong>3</strong></td>
+     <td align="center"><strong>2</strong></td>
+     <td align="center"><strong>1</strong></td>
+     <td align="center"><strong>0</strong></td>
+   </tr>
+   <tr>
+     <td>byte 1</td>
+     <td colspan="8" align="center">报文标识符 MSB</td>
+   </tr>
+   <tr>
+     <td>byte 2</td>
+     <td colspan="8" align="center">报文标识符 LSB</td>
+   </tr>
+ </table>
 
 ### 3.10.3 有效载荷
 
@@ -72,7 +117,7 @@ UNSUBSCRIBE报文提供的主题过滤器（无论是否包含通配符）**必�
 -   它**必须**完成分发任何已经开始往客户端发送的QoS 1和QoS 2的消息 \[MQTT-3.10.4-3\]。
 -   它**可以**继续发送任何现存的准备分发给客户端的缓存消息。
 
-服务端**必须**发送UNSUBACK报文响应客户端的UNSUBSCRIBE请求。UNSUBACK报文**必须**包含和UNSUBSCRIBE报文相同的报文标识符 \[MQTT-3.10.4-4\]。即使没有删除任何主题订阅，服务端也**必须**发送一个SUBACK响应 \[MQTT-3.10.4-5\]。
+服务端**必须**发送UNSUBACK报文响应客户端的UNSUBSCRIBE请求。UNSUBACK报文**必须**包含和UNSUBSCRIBE报文相同的报文标识符 \[MQTT-3.10.4-4\]。即使没有删除任何主题订阅，服务端也**必须**发送一个UNSUBACK响应 \[MQTT-3.10.4-5\]。
 
 如果服务端收到包含多个主题过滤器的UNSUBSCRIBE报文，它**必须**如同收到了一系列的多个UNSUBSCRIBE报文一样处理那个报文，除了将它们的响应合并到一个单独的UNSUBACK报文外。 \[MQTT-3.10.4-6\]。
 

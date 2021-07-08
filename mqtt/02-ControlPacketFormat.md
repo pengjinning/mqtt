@@ -19,10 +19,20 @@ MQTT控制报文由三部分组成，按照 [图例 2.1 –MQTT控制报文的�
 
 ##### 图例 2.1 –MQTT控制报文的结构
 
-| Fixed header | 固定报头，所有控制报文都包含  |
-|-----------------|---------------------------|
-| Variable header | 可变报头，部分控制报文包含 |
-| Payload | 有效载荷，部分控制报文包含         |
+<table style="text-align:center">
+  <tr>
+    <td align="center">Fixed header</td>
+    <td >固定报头，所有控制报文都包含</td>
+  </tr>
+  <tr>
+    <td align="center">Variable header</td>
+    <td>可变报头，部分控制报文包含</td>
+  </tr>
+  <tr>
+    <td align="center">Payload</td>
+    <td>有效载荷，部分控制报文包含</td>
+  </tr>
+</table>
 
 ## 2.2 固定报头 Fixed header
 
@@ -30,10 +40,28 @@ MQTT控制报文由三部分组成，按照 [图例 2.1 –MQTT控制报文的�
 
 ##### 图例 2.2 -固定报头的格式
 
-| **Bit** | **7**  - **0** |
-|---------|-------|
-| byte 1  | MQTT控制报文的类型 | 用于指定控制报文类型的标志位 |
-| byte 2… | 剩余长度           |
+<table style="text-align:center">
+  <tr>
+    <td align="center"><strong>Bit</strong></td>
+    <td align="center"><strong>7</strong></td>
+    <td align="center"><strong>6</strong></td>
+    <td align="center"><strong>5</strong></td>
+    <td align="center"><strong>4</strong></td>
+    <td align="center"><strong>3</strong></td>
+    <td align="center"><strong>2</strong></td>
+    <td align="center"><strong>1</strong></td>
+    <td align="center"><strong>0</strong></td>
+  </tr>
+  <tr>
+    <td>byte 1</td>
+    <td colspan="4" align="center">MQTT控制报文的类型</td>
+    <td colspan="4" align="center">用于指定控制报文类型的标志位</td>
+  </tr>
+  <tr>
+    <td>byte 2...</td>
+    <td colspan="8" align="center">剩余长度</td>
+  </tr>
+</table>
 
 ### 2.2.1 MQTT控制报文的类型 MQTT Control Packet type
 
@@ -139,6 +167,7 @@ PUBLISH控制报文中的DUP, QoS和RETAIN标志的描述见 3.3.1节。
  endif
      'output' encodedByte
 while ( X > 0 )
+
 ```
 
 >MOD是模运算，DIV是整数除法，OR是位操作或（C语言中分别是%，/，|）
@@ -152,11 +181,11 @@ while ( X > 0 )
 multiplier = 1
 value = 0
 do
-    encodedByte = 'next byte from stream'
-    value += (encodedByte AND 127) * multiplier
-    multiplier *= 128
-    if (multiplier > 128*128*128)
-       throw Error(Malformed Remaining Length)
+      encodedByte = 'next byte from stream'
+      value += (encodedByte AND 127) * multiplier
+      if (multiplier > 128*128*128)
+        throw Error(Malformed Remaining Length)
+      multiplier *= 128
 while ((encodedByte AND 128) != 0)
 ```
 
@@ -177,7 +206,7 @@ while ((encodedByte AND 128) != 0)
 | byte 1  | 报文标识符 MSB |
 | byte 2  | 报文标识符 LSB |
 
-很多控制报文的可变报头部分包含一个两字节的报文标识符字段。这些报文是PUBLISH（QoS > 0时）， PUBACK，PUBREC，PUBREL，PUBCOMP，SUBSCRIBE, SUBACK，UNSUBSCIBE，UNSUBACK。
+很多控制报文的可变报头部分包含一个两字节的报文标识符字段。这些报文是PUBLISH（QoS > 0时）， PUBACK，PUBREC，PUBREL，PUBCOMP，SUBSCRIBE, SUBACK，UNSUBSCRIBE，UNSUBACK。
 
 SUBSCRIBE，UNSUBSCRIBE和PUBLISH（QoS大于0）控制报文**必须**包含一个非零的16位报文标识符（Packet Identifier）\[MQTT-2.3.1-1\]。客户端每次发送一个新的这些类型的报文时都**必须**分配一个当前未使用的报文标识符 \[MQTT-2.3.1-2\]。如果一个客户端要重发这个特殊的控制报文，在随后重发那个报文时，它**必须**使用相同的标识符。当客户端处理完这个报文对应的确认后，这个报文标识符就释放可重用。QoS 1的PUBLISH对应的是PUBACK，QoS 2的PUBLISH对应的是PUBCOMP，与SUBSCRIBE或UNSUBSCRIBE对应的分别是SUBACK或UNSUBACK \[MQTT-2.3.1-3\]。发送一个QoS 0的PUBLISH报文时，相同的条件也适用于服务端 \[MQTT-2.3.1-4\]。
 
